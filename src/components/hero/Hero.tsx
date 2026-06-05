@@ -49,7 +49,7 @@ export default function Hero() {
   return (
     <section
       ref={root}
-      className="vignette relative flex min-h-[100svh] w-full flex-col justify-between overflow-hidden px-[var(--gutter)] pb-10 pt-28 md:pt-32"
+      className="vignette relative flex min-h-[100svh] w-full flex-col overflow-hidden px-[var(--gutter)] pb-10 pt-28 md:pt-32"
     >
       {/* WebGL layer */}
       <div data-hero-canvas className="pointer-events-none absolute inset-0 -z-0">
@@ -79,8 +79,11 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* headline */}
-      <div data-hero-type className="relative z-10 mt-auto select-none">
+      {/* headline — centered over the blob */}
+      <div
+        data-hero-type
+        className="relative z-10 flex flex-1 flex-col items-center justify-center text-center select-none"
+      >
         <h1 className="font-display text-mega leading-[0.82]">
           <span data-hero-line className="line-mask">
             <span className="inline-block will-change-transform">ANDREW</span>
@@ -89,27 +92,25 @@ export default function Hero() {
         <p data-hero-fade className="mt-2 font-serif text-h3 italic leading-none text-[var(--color-acid)]">
           Aghoghovwia
         </p>
-        <div className="mt-6 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <p
-            data-hero-fade
-            className="max-w-[36ch] text-lead font-light text-[var(--color-bone-dim)]"
-          >
-            I build interfaces with <span className="font-serif italic text-[var(--color-bone)]">gravity</span>{" "}
-            — fast, accessible products, from React frontends to Python AI systems, engineered to ship.
-          </p>
-          <button
-            data-hero-fade
-            data-cursor="view"
-            data-cursor-label="Scroll"
-            onClick={() => scrollTo("#work")}
-            className="group flex items-center gap-3 self-start text-label uppercase tracking-[0.2em] text-[var(--color-bone-dim)] transition-colors hover:text-[var(--color-acid)] md:self-auto"
-          >
-            <span className="font-mono">[ View work ]</span>
-            <span className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-1">
-              ↓
-            </span>
-          </button>
-        </div>
+        <p
+          data-hero-fade
+          className="mt-7 max-w-[42ch] text-lead font-light text-[var(--color-bone-dim)]"
+        >
+          I build interfaces with <span className="font-serif italic text-[var(--color-bone)]">gravity</span>{" "}
+          — fast, accessible products, from React frontends to Python AI systems, engineered to ship.
+        </p>
+        <button
+          data-hero-fade
+          data-cursor="view"
+          data-cursor-label="Scroll"
+          onClick={() => scrollTo("#work")}
+          className="group mt-9 flex items-center gap-3 text-label uppercase tracking-[0.2em] text-[var(--color-bone-dim)] transition-colors hover:text-[var(--color-acid)]"
+        >
+          <span className="font-mono">[ View work ]</span>
+          <span className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-1">
+            ↓
+          </span>
+        </button>
       </div>
     </section>
   );

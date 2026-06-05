@@ -18,9 +18,10 @@ function Blob({ pointer, reduced }: { pointer: PointerRef; reduced: boolean }) {
       uFreq: { value: 1.25 },
       uMouse: { value: new THREE.Vector3(0, 0, 1) },
       uMousePull: { value: 0 },
-      uColorA: { value: new THREE.Color("#140a05") },
-      uColorB: { value: new THREE.Color("#3a1606") },
+      uColorA: { value: new THREE.Color("#0a0402") },
+      uColorB: { value: new THREE.Color("#6e1208") },
       uAccent: { value: new THREE.Color("#ff5a1f") },
+      uHot: { value: new THREE.Color("#ffd24a") },
     }),
     [],
   );
@@ -109,10 +110,10 @@ function Particles({ pointer, reduced }: { pointer: PointerRef; reduced: boolean
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.018}
-        color="#ece8df"
+        size={0.02}
+        color="#ff8a3d"
         transparent
-        opacity={0.7}
+        opacity={0.85}
         sizeAttenuation
         depthWrite={false}
         blending={THREE.AdditiveBlending}

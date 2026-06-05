@@ -64,11 +64,12 @@ ${SIMPLEX}
 void main(){
   vec3 pos = position;
 
-  // layered noise — slow base swell + faster surface ripple
+  // layered noise — slow base swell + faster surface ripple + fine flame shimmer
   float t = uTime * 0.35;
   float n1 = snoise(pos * uFreq + vec3(t));
   float n2 = snoise(pos * (uFreq * 2.3) + vec3(-t * 1.4)) * 0.4;
-  float noise = n1 + n2;
+  float n3 = snoise(pos * (uFreq * 4.5) + vec3(uTime * 1.6)) * 0.12;
+  float noise = n1 + n2 + n3;
 
   // gravitational pull toward the cursor direction
   float pull = max(dot(normalize(position), normalize(uMouse + 0.0001)), 0.0);
@@ -87,9 +88,10 @@ void main(){
 
 export const blobFragment = /* glsl */ `
 precision highp float;
-uniform vec3 uColorA;   // deep body
-uniform vec3 uColorB;   // mid
-uniform vec3 uAccent;   // rim accent
+uniform vec3 uColorA;   // near-black base
+uniform vec3 uColorB;   // deep red
+uniform vec3 uAccent;   // orange
+uniform vec3 uHot;      // hot yellow
 uniform float uTime;
 
 varying vec3 vNormal;
@@ -99,14 +101,21 @@ varying float vDisp;
 void main(){
   // fresnel rim
   float fres = 1.0 - max(dot(normalize(vNormal), normalize(vView)), 0.0);
-  fres = pow(fres, 2.4);
+  fres = pow(fres, 2.2);
 
-  // body gradient driven by displacement (ridges glow toward accent)
-  vec3 body = mix(uColorA, uColorB, smoothstep(-0.3, 0.6, vDisp));
-  vec3 col = mix(body, uAccent, fres * 0.9);
+  // heat = how raised the surface is, with a live flame flicker over time
+  float flick = 0.82 + 0.18 * sin(uTime * 6.0 + vDisp * 12.0);
+  float heat = clamp(smoothstep(-0.45, 0.78, vDisp) * flick, 0.0, 1.0);
 
-  // faint accent glow on raised ridges
-  col += uAccent * smoothstep(0.25, 0.6, vDisp) * 0.25;
+  // fire ramp: black -> deep red -> orange -> hot yellow on the ridges
+  vec3 col = uColorA;
+  col = mix(col, uColorB, smoothstep(0.05, 0.45, heat));
+  col = mix(col, uAccent, smoothstep(0.34, 0.72, heat));
+  col = mix(col, uHot,    smoothstep(0.70, 1.0, heat));
+
+  // molten fresnel rim — orange edge that flares hot
+  col = mix(col, uAccent, fres * 0.55);
+  col += uHot * pow(fres, 1.6) * 0.6;
 
   gl_FragColor = vec4(col, 1.0);
 }
