@@ -109,8 +109,8 @@ export default function Work() {
 
   return (
     <section id="work" ref={section} className="relative overflow-hidden bg-[var(--color-ink)]">
-      {/* header sits above the pinned track */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between px-[var(--gutter)] pt-24 md:pt-28">
+      {/* header — in flow on mobile, overlays the pinned track on desktop */}
+      <div className="pointer-events-none z-20 flex items-start justify-between px-[var(--gutter)] pt-28 pb-2 md:absolute md:inset-x-0 md:top-0 md:pb-0 md:pt-28">
         <p className="label">
           <span className="text-[var(--color-acid)]">[02]</span>
           <br />
@@ -126,7 +126,7 @@ export default function Work() {
       {/* horizontal track */}
       <div
         ref={track}
-        className="flex h-[100svh] items-center gap-[6vw] px-[var(--gutter)] will-change-transform max-md:h-auto max-md:flex-col max-md:gap-16 max-md:py-28"
+        className="flex h-[100svh] items-center gap-[6vw] px-[var(--gutter)] will-change-transform max-md:h-auto max-md:flex-col max-md:gap-16 max-md:pb-24 max-md:pt-4"
         style={{ width: "max-content" }}
       >
         {/* intro plate */}
