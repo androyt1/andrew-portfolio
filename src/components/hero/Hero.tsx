@@ -53,9 +53,9 @@ export default function Hero() {
     >
       {/* WebGL layer */}
       <div data-hero-canvas className="pointer-events-none absolute inset-0 -z-0">
-        {!reduced && !coarse ? (
+        {!reduced ? (
           <Suspense fallback={null}>
-            <GravScene pointer={target} reduced={reduced} />
+            <GravScene pointer={target} reduced={reduced} lite={coarse} />
           </Suspense>
         ) : (
           <div className="absolute left-1/2 top-1/2 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#3a1606,transparent_70%)] blur-2xl" />

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Magnetic from "./ui/Magnetic";
+import MobileMenu from "./MobileMenu";
 import { scrollTo } from "../lib/smoothScroll";
 
 function Clock() {
@@ -93,7 +94,7 @@ export default function Nav() {
         <span className="hidden sm:inline">
           <Clock />
         </span>
-        <Magnetic strength={0.5}>
+        <Magnetic strength={0.5} className="hidden md:block">
           <a
             href="#contact"
             onClick={(e) => {
@@ -106,6 +107,7 @@ export default function Nav() {
             Contact
           </a>
         </Magnetic>
+        <MobileMenu />
       </div>
     </header>
   );

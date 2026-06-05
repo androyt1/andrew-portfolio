@@ -5,7 +5,15 @@ import { blobVertex, blobFragment } from "./blobShaders";
 
 type PointerRef = MutableRefObject<{ x: number; y: number }>;
 
-function Blob({ pointer, reduced }: { pointer: PointerRef; reduced: boolean }) {
+function Blob({
+  pointer,
+  reduced,
+  lite,
+}: {
+  pointer: PointerRef;
+  reduced: boolean;
+  lite: boolean;
+}) {
   const mat = useRef<THREE.ShaderMaterial>(null);
   const mesh = useRef<THREE.Mesh>(null);
   const mouse = useRef(new THREE.Vector3(0, 0, 1));
@@ -58,7 +66,7 @@ function Blob({ pointer, reduced }: { pointer: PointerRef; reduced: boolean }) {
 
   return (
     <mesh ref={mesh}>
-      <icosahedronGeometry args={[1.25, reduced ? 28 : 72]} />
+      <icosahedronGeometry args={[1.25, reduced ? 24 : lite ? 44 : 72]} />
       <shaderMaterial
         ref={mat}
         vertexShader={blobVertex}
@@ -69,9 +77,17 @@ function Blob({ pointer, reduced }: { pointer: PointerRef; reduced: boolean }) {
   );
 }
 
-function Particles({ pointer, reduced }: { pointer: PointerRef; reduced: boolean }) {
+function Particles({
+  pointer,
+  reduced,
+  lite,
+}: {
+  pointer: PointerRef;
+  reduced: boolean;
+  lite: boolean;
+}) {
   const ref = useRef<THREE.Points>(null);
-  const count = reduced ? 240 : 560;
+  const count = reduced ? 240 : lite ? 300 : 560;
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -134,20 +150,22 @@ function Rig() {
 export default function GravScene({
   pointer,
   reduced,
+  lite = false,
 }: {
   pointer: PointerRef;
   reduced: boolean;
+  lite?: boolean;
 }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 42 }}
-      dpr={[1, reduced ? 1.2 : 1.8]}
+      dpr={[1, reduced ? 1.2 : lite ? 1.5 : 1.8]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       style={{ width: "100%", height: "100%" }}
     >
       <Rig />
-      <Blob pointer={pointer} reduced={reduced} />
-      <Particles pointer={pointer} reduced={reduced} />
+      <Blob pointer={pointer} reduced={reduced} lite={lite} />
+      <Particles pointer={pointer} reduced={reduced} lite={lite} />
     </Canvas>
   );
 }
