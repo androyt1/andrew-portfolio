@@ -23,9 +23,9 @@ const PROJECTS: Project[] = [
     blurb:
       "Analyses public repositories and auto-generates codebase summaries, stack breakdowns, code-quality reports and README drafts.",
     year: "2026",
-    tint: "#ccff00",
+    tint: "#ff5a1f",
     surface:
-      "radial-gradient(120% 90% at 20% 15%, #1c2406 0%, #0c0f04 55%), linear-gradient(135deg, #161a08, #0a0908)",
+      "radial-gradient(120% 90% at 20% 15%, #2a1206 0%, #0f0a06 55%), linear-gradient(135deg, #1a1108, #0a0908)",
   },
   {
     index: "02",
@@ -59,9 +59,9 @@ const PROJECTS: Project[] = [
     blurb:
       "Collaborative workspace with live cursors, threaded comments and Markdown autosave — Google Docs-style interactions.",
     year: "2026",
-    tint: "#ff6a3d",
+    tint: "#5fd39a",
     surface:
-      "radial-gradient(120% 90% at 30% 80%, #2a1206 0%, #100805 60%), linear-gradient(135deg, #1a0f08, #0a0908)",
+      "radial-gradient(120% 90% at 30% 80%, #0a2616 0%, #060f0a 60%), linear-gradient(135deg, #0b1812, #0a0908)",
   },
 ];
 

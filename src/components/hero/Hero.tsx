@@ -58,7 +58,7 @@ export default function Hero() {
             <GravScene pointer={target} reduced={reduced} />
           </Suspense>
         ) : (
-          <div className="absolute left-1/2 top-1/2 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#26310a,transparent_70%)] blur-2xl" />
+          <div className="absolute left-1/2 top-1/2 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#3a1606,transparent_70%)] blur-2xl" />
         )}
       </div>
 

@@ -18,9 +18,9 @@ function Blob({ pointer, reduced }: { pointer: PointerRef; reduced: boolean }) {
       uFreq: { value: 1.25 },
       uMouse: { value: new THREE.Vector3(0, 0, 1) },
       uMousePull: { value: 0 },
-      uColorA: { value: new THREE.Color("#0c1405") },
-      uColorB: { value: new THREE.Color("#26310a") },
-      uAccent: { value: new THREE.Color("#ccff00") },
+      uColorA: { value: new THREE.Color("#140a05") },
+      uColorB: { value: new THREE.Color("#3a1606") },
+      uAccent: { value: new THREE.Color("#ff5a1f") },
     }),
     [],
   );
