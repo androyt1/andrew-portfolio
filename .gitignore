@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-ssr
+*.local
+.vercel
+.DS_Store
+node_modules/.tmp
+*.tsbuildinfo
+
+.vercel

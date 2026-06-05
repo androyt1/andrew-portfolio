@@ -1,0 +1,236 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------------
+   GRAV — design tokens
+   warm near-black / bone white / electric lime accent
+---------------------------------------------------------------------------- */
+@theme {
+  --color-void: #0a0908;
+  --color-ink: #0f0e0c;
+  --color-coal: #16140f;
+  --color-bone: #ece8df;
+  --color-bone-dim: #a7a299;
+  --color-ash: #6b665d;
+  --color-acid: #ccff00;
+  --color-acid-deep: #aadd00;
+
+  --font-display: "Syne", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --font-serif: "Instrument Serif", serif;
+  --font-mono: "Space Mono", monospace;
+
+  /* fluid type scale — clamp(min, fluid, max) */
+  --text-micro: clamp(0.68rem, 0.62rem + 0.3vw, 0.8rem);
+  --text-label: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-body: clamp(1rem, 0.94rem + 0.3vw, 1.2rem);
+  --text-lead: clamp(1.35rem, 1.1rem + 1.2vw, 2.2rem);
+  --text-h3: clamp(1.8rem, 1.2rem + 3vw, 3.5rem);
+  --text-h2: clamp(2.6rem, 1.2rem + 6.6vw, 7rem);
+  --text-display: clamp(4rem, 1rem + 14vw, 16rem);
+  --text-mega: clamp(4.25rem, 1rem + 16.5vw, 21rem);
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-expo-io: cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+  }
+
+  :root {
+    --gutter: clamp(1.25rem, 5vw, 5rem);
+    --grain-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background: var(--color-void);
+  }
+
+  /* Lenis controls scroll — keep native scrollbar out of the way */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-void);
+    color: var(--color-bone);
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-body);
+    line-height: 1.6;
+    overflow-x: clip;
+    cursor: none;
+  }
+
+  /* keep native cursor for touch / coarse pointers */
+  @media (pointer: coarse) {
+    body {
+      cursor: auto;
+    }
+  }
+
+  ::selection {
+    background: var(--color-acid);
+    color: var(--color-void);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-acid);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Utilities
+---------------------------------------------------------------------------- */
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  .font-body { font-family: var(--font-body); }
+  .font-serif { font-family: var(--font-serif); }
+  .font-mono { font-family: var(--font-mono); }
+
+  .text-mega { font-size: var(--text-mega); }
+  .text-display { font-size: var(--text-display); }
+  .text-h2 { font-size: var(--text-h2); }
+  .text-h3 { font-size: var(--text-h3); }
+  .text-lead { font-size: var(--text-lead); }
+  .text-label { font-size: var(--text-label); }
+  .text-micro { font-size: var(--text-micro); }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--color-bone-dim);
+  }
+
+  /* clip-mask reveal: child text starts translated below */
+  .line-mask {
+    overflow: hidden;
+    display: block;
+  }
+
+  .edge {
+    border-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Grain / noise overlay
+---------------------------------------------------------------------------- */
+.grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: var(--grain-url);
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  will-change: transform;
+  animation: grain-shift 0.7s steps(4) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -4%); }
+  75% { transform: translate(-2%, 3%); }
+  100% { transform: translate(3%, -2%); }
+}
+
+/* ----------------------------------------------------------------------------
+   Custom cursor ring states
+---------------------------------------------------------------------------- */
+.cursor-ring {
+  transition:
+    width 0.4s var(--ease-expo),
+    height 0.4s var(--ease-expo),
+    background-color 0.4s var(--ease-expo),
+    border-color 0.4s var(--ease-expo),
+    opacity 0.3s ease;
+  will-change: transform, width, height;
+}
+.cursor-ring[data-active="true"] {
+  width: 5.5rem;
+  height: 5.5rem;
+  background-color: var(--color-acid);
+  border-color: transparent;
+}
+.cursor-ring[data-variant="view"] {
+  width: 7rem;
+  height: 7rem;
+}
+.cursor-ring[data-down="true"] {
+  scale: 0.82;
+}
+
+/* vignette to seat the WebGL hero */
+.vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    color-mix(in oklab, var(--color-void) 85%, transparent) 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}
