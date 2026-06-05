@@ -33,7 +33,7 @@ const PROJECTS: Project[] = [
     category: "Voice RAG Assistant",
     stack: "Python · FastAPI · LangGraph · Pinecone",
     blurb:
-      "Production RAG pipeline that ingests resume data into Pinecone and answers recruiter questions with traced, cited responses.",
+      "Production RAG pipeline that ingests resume data into Pinecone and answers recruiter questions out loud — voice queries in, traced and cited responses back.",
     year: "2026",
     tint: "#7cf0ff",
     surface:
@@ -53,7 +53,7 @@ const PROJECTS: Project[] = [
   },
   {
     index: "04",
-    title: "LIVEBOARD",
+    title: "LIVE BOARD",
     category: "Real-Time Collaboration",
     stack: "React · WebSockets · Supabase",
     blurb:
@@ -189,10 +189,10 @@ function Card({ project }: { project: Project }) {
 
         <div data-card-meta>
           <p className="label mb-3">{project.category}</p>
-          <h3 className="text-h2 font-display leading-[0.88] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1">
+          <h3 className="font-display text-[clamp(1.6rem,4.2vw,3.75rem)] leading-[0.95] [overflow-wrap:break-word] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1">
             {project.title}
           </h3>
-          <p className="mt-4 max-w-[40ch] text-body leading-snug text-[var(--color-bone-dim)] opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100">
+          <p className="mt-4 max-w-[40ch] text-body leading-snug text-[var(--color-bone-dim)] opacity-100 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:opacity-0 md:group-hover:opacity-100">
             {project.blurb}
           </p>
           <p className="mt-4 font-mono text-micro uppercase tracking-[0.16em]" style={{ color: project.tint }}>

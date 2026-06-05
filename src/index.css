@@ -25,9 +25,9 @@
   --text-body: clamp(1rem, 0.94rem + 0.3vw, 1.2rem);
   --text-lead: clamp(1.35rem, 1.1rem + 1.2vw, 2.2rem);
   --text-h3: clamp(1.8rem, 1.2rem + 3vw, 3.5rem);
-  --text-h2: clamp(2.6rem, 1.2rem + 6.6vw, 7rem);
-  --text-display: clamp(4rem, 1rem + 14vw, 16rem);
-  --text-mega: clamp(4.25rem, 1rem + 16.5vw, 21rem);
+  --text-h2: clamp(2.4rem, 1.2rem + 6vw, 7rem);
+  --text-display: clamp(2.5rem, 8.5vw, 12rem);
+  --text-mega: clamp(2rem, 9.5vw, 13rem);
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
@@ -53,6 +53,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     background: var(--color-void);
+    overflow-x: clip;
   }
 
   /* Lenis controls scroll — keep native scrollbar out of the way */

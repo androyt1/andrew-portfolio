@@ -102,9 +102,9 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* giant clipped wordmark */}
-      <div className="pointer-events-none mt-12 select-none overflow-hidden">
-        <h2 className="translate-y-[18%] text-center font-display text-mega font-extrabold leading-[0.7] tracking-tight text-[var(--color-bone)]">
+      {/* giant wordmark */}
+      <div className="pointer-events-none mt-12 select-none">
+        <h2 className="text-center font-display text-mega font-extrabold leading-[0.9] tracking-tight text-[var(--color-bone)]">
           ANDREW<span className="text-[var(--color-acid)]">°</span>
         </h2>
       </div>

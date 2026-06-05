@@ -12,52 +12,60 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
   const countRef = useRef<HTMLSpanElement>(null);
   const [gone, setGone] = useState(false);
 
+  // keep latest onDone without retriggering the effect
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
+
   useEffect(() => {
     const el = root.current!;
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      onDoneRef.current();
+      setGone(true);
+    };
 
     if (reduced) {
-      onDone();
-      setGone(true);
+      finish();
       return;
     }
 
-    const counter = { v: 0 };
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          onDone();
-          setGone(true);
-        },
-      });
+    // Safety net: rAF (and thus GSAP) is paused while the tab is hidden, so a
+    // background-tab load could otherwise sit on the preloader forever. Timers
+    // still fire when hidden, so guarantee the reveal regardless of animation.
+    const safety = window.setTimeout(finish, 6000);
 
-      tl.from("[data-pre-char]", {
-        yPercent: 110,
-        duration: 1,
-        ease: "expo.out",
-        stagger: 0.07,
-      })
-        .to(
-          counter,
-          {
-            v: 100,
-            duration: 2.1,
-            ease: "power2.inOut",
-            onUpdate: () => {
-              if (countRef.current)
-                countRef.current.textContent = String(Math.round(counter.v)).padStart(3, "0");
-            },
+    const counter = { v: 0 };
+    const tl = gsap.timeline({ onComplete: finish });
+
+    tl.fromTo(
+      "[data-pre-char]",
+      { yPercent: 110 },
+      { yPercent: 0, duration: 1, ease: "expo.out", stagger: 0.07 },
+    )
+      .to(
+        counter,
+        {
+          v: 100,
+          duration: 2.1,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            if (countRef.current)
+              countRef.current.textContent = String(Math.round(counter.v)).padStart(3, "0");
           },
-          0,
-        )
-        .to("[data-pre-bar]", { scaleX: 1, duration: 2.1, ease: "power2.inOut" }, 0)
-        .to("[data-pre-content]", { autoAlpha: 0, duration: 0.4, ease: "power2.in" }, "+=0.15")
-        .to(el, { yPercent: -100, duration: 1.1, ease: "expo.inOut" });
-    }, el);
+        },
+        0,
+      )
+      .fromTo("[data-pre-bar]", { scaleX: 0 }, { scaleX: 1, duration: 2.1, ease: "power2.inOut" }, 0)
+      .to("[data-pre-content]", { autoAlpha: 0, duration: 0.4, ease: "power2.in" }, "+=0.15")
+      .to(el, { yPercent: -100, duration: 1.1, ease: "expo.inOut" });
 
     return () => {
-      ctx.revert();
+      window.clearTimeout(safety);
+      tl.kill();
     };
-  }, [onDone, reduced]);
+  }, [reduced]);
 
   if (gone) return null;
 
