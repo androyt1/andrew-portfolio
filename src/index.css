@@ -55,6 +55,9 @@
     text-rendering: optimizeLegibility;
     background: var(--color-void);
     overflow-x: clip;
+    /* always reserve the scrollbar space so content never shifts sideways
+       when the scrollbar appears/disappears (e.g. during smooth scroll) */
+    scrollbar-gutter: stable;
   }
 
   /* Lenis controls scroll — keep native scrollbar out of the way */

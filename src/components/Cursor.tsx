@@ -51,8 +51,8 @@ export default function Cursor() {
     const onUp = () => (ring.dataset.down = "false");
 
     const loop = () => {
-      ringPos.x += (mouse.x - ringPos.x) * 0.16;
-      ringPos.y += (mouse.y - ringPos.y) * 0.16;
+      ringPos.x += (mouse.x - ringPos.x) * 0.28;
+      ringPos.y += (mouse.y - ringPos.y) * 0.28;
       ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`;
       raf = requestAnimationFrame(loop);
     };
