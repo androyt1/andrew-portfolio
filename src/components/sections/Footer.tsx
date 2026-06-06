@@ -59,10 +59,9 @@ export default function Footer() {
           <p className="label mb-4">Elsewhere</p>
           <ul className="space-y-1 text-body text-[var(--color-bone-dim)]">
             {[
+              ["LinkedIn", "https://www.linkedin.com/in/andrew-aghoghovwia"],
               ["Portfolio", "https://portfolio-next-coral-alpha.vercel.app"],
               ["Email", "mailto:androyt1@gmail.com"],
-              ["GitHub", "#"],
-              ["LinkedIn", "#"],
             ].map(([l, h]) => (
               <li key={l}>
                 <a

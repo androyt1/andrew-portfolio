@@ -11,8 +11,7 @@ const LINKS: [string, string][] = [
 ];
 
 const SOCIAL: [string, string][] = [
-  ["GitHub", "#"],
-  ["LinkedIn", "#"],
+  ["LinkedIn", "https://www.linkedin.com/in/andrew-aghoghovwia"],
   ["Portfolio", "https://portfolio-next-coral-alpha.vercel.app"],
 ];
 
