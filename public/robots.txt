@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://grav-six.vercel.app/sitemap.xml
+Sitemap: https://andrew-aghoghovwia.vercel.app/sitemap.xml

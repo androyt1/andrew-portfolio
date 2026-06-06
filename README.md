@@ -1,6 +1,6 @@
 # Andrew Aghoghovwia — Portfolio
 
-**Live:** [grav-six.vercel.app](https://grav-six.vercel.app)
+**Live:** [andrew-aghoghovwia.vercel.app](https://andrew-aghoghovwia.vercel.app)
 
 An Awwwards-tier personal portfolio for **Andrew Aghoghovwia**, Senior Frontend & AI Engineer. Themed around *gravity / weight / pull* ("interfaces with gravity"). Dark, cinematic, scroll-driven, built for 60fps.
 
