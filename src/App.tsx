@@ -11,6 +11,7 @@ import Capabilities from "./components/sections/Capabilities";
 import About from "./components/sections/About";
 import Marquee from "./components/sections/Marquee";
 import Footer from "./components/sections/Footer";
+import Assistant from "./components/Assistant";
 
 export default function App() {
   const [ready, setReady] = useState(false);
@@ -52,6 +53,7 @@ export default function App() {
         <Marquee />
         <Footer />
       </main>
+      <Assistant />
     </>
   );
 }
