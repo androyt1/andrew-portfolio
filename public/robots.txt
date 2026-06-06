@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://grav-six.vercel.app/sitemap.xml

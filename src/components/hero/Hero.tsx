@@ -103,7 +103,10 @@ export default function Hero() {
         className="relative z-10 flex flex-1 flex-col items-center justify-center text-center select-none"
       >
         <h1 className="font-display text-mega leading-[0.82]">
-          <span data-hero-line className="line-mask">
+          <span className="sr-only">
+            Andrew Aghoghovwia — Senior Frontend &amp; AI Engineer based in the UK
+          </span>
+          <span data-hero-line className="line-mask" aria-hidden="true">
             <span className="inline-block will-change-transform">ANDREW</span>
           </span>
         </h1>

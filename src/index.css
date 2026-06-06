@@ -15,10 +15,10 @@
   --color-acid: #f5f2ec;
   --color-acid-deep: #cfcabf;
 
-  --font-display: "Syne", sans-serif;
-  --font-body: "Manrope", sans-serif;
-  --font-serif: "Instrument Serif", serif;
-  --font-mono: "Space Mono", monospace;
+  --font-display: "Syne Variable", "Syne", system-ui, sans-serif;
+  --font-body: "Manrope Variable", "Manrope", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
 
   /* fluid type scale — clamp(min, fluid, max) */
   --text-micro: clamp(0.68rem, 0.62rem + 0.3vw, 0.8rem);
@@ -185,6 +185,19 @@
 
   .edge {
     border-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+  }
+
+  /* visually hidden but available to screen readers + search crawlers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 
