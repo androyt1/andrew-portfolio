@@ -94,9 +94,25 @@ export default function Assistant() {
     if (open) setTimeout(() => inputRef.current?.focus(), 350);
   }, [open]);
 
+  // iOS Safari only permits speech that was unlocked by a user gesture — call
+  // this from the tap that turns Voice on to prime the engine for the session.
+  function primeSpeech() {
+    if (typeof speechSynthesis === "undefined") return;
+    try {
+      speechSynthesis.cancel();
+      const warm = new SpeechSynthesisUtterance(" ");
+      warm.volume = 0;
+      if (voiceRef.current) warm.voice = voiceRef.current;
+      speechSynthesis.speak(warm);
+    } catch {
+      /* ignore */
+    }
+  }
+
   function speak(text: string) {
     if (!voiceOut || typeof speechSynthesis === "undefined") return;
     speechSynthesis.cancel();
+    speechSynthesis.resume(); // iOS sometimes parks the queue
     const u = new SpeechSynthesisUtterance(text);
     if (voiceRef.current) u.voice = voiceRef.current;
     u.rate = 1;
@@ -225,8 +241,10 @@ export default function Assistant() {
           <div className="flex items-center gap-1">
             <button
               onClick={() => {
-                if (voiceOut && typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
-                setVoiceOut((v) => !v);
+                const turningOn = !voiceOut;
+                if (turningOn) primeSpeech();
+                else if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+                setVoiceOut(turningOn);
               }}
               data-cursor="hover"
               aria-pressed={voiceOut}
