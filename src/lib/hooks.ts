@@ -12,6 +12,19 @@ export function usePrefersReducedMotion() {
   return reduced;
 }
 
+/** Generic media-query hook (SSR-safe, live-updating). */
+export function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    setMatches(mq.matches);
+    const on = () => setMatches(mq.matches);
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, [query]);
+  return matches;
+}
+
 /** Coarse pointer (touch) — used to disable custom cursor + heavy effects. */
 export function useCoarsePointer() {
   const [coarse, setCoarse] = useState(false);

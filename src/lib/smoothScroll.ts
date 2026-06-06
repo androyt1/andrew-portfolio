@@ -10,6 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 // the noisy warning rather than let it clutter the console.
 gsap.config({ nullTargetWarn: false });
 
+// Don't re-measure every trigger when the mobile browser chrome (URL bar)
+// shows/hides during scroll — that's the #1 cause of content "jumping" on
+// phones. Heights are resolved on real resizes only.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 let lenis: Lenis | null = null;
 
 const prefersReduced = () =>
@@ -28,14 +33,18 @@ export function initSmoothScroll(): () => void {
   }
 
   lenis = new Lenis({
-    duration: 1.15,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expo out
+    // frame-rate-independent smoothing — responsive but buttery, not floaty
+    lerp: 0.1,
     smoothWheel: true,
     wheelMultiplier: 1,
-    touchMultiplier: 1.6,
+    // leave touch to the platform's native momentum — feels natural on phones
+    syncTouch: false,
+    touchMultiplier: 1.5,
   });
 
   lenis.on("scroll", ScrollTrigger.update);
+  // keep ScrollTrigger's cached sizes in step with Lenis after any refresh
+  ScrollTrigger.addEventListener("refresh", () => lenis?.resize());
   if (import.meta.env.DEV) (window as unknown as { __gravLenis: Lenis }).__gravLenis = lenis;
 
   const raf = (time: number) => {

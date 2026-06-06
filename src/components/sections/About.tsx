@@ -44,18 +44,25 @@ const TIMELINE = [
 
 function Counter({ value, suffix }: { value: number; suffix: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  useGSAP(() => {
-    const obj = { v: 0 };
-    gsap.to(obj, {
-      v: value,
-      duration: 2,
-      ease: "expo.out",
-      scrollTrigger: { trigger: ref.current, start: "top 88%" },
-      onUpdate: () => {
-        if (ref.current) ref.current.textContent = String(Math.round(obj.v));
-      },
-    });
-  }, []);
+  useGSAP(
+    () => {
+      const obj = { v: 0 };
+      gsap.to(obj, {
+        v: value,
+        duration: 2,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ref.current, start: "top 90%" },
+        onUpdate: () => {
+          if (ref.current) ref.current.textContent = String(Math.round(obj.v));
+        },
+      });
+    },
+    [],
+    // reduced motion: show the final number immediately
+    () => {
+      if (ref.current) ref.current.textContent = String(value);
+    },
+  );
   return (
     <span className="tabular-nums">
       <span ref={ref}>0</span>

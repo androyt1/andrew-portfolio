@@ -9,24 +9,32 @@ export default function Manifesto() {
   const root = useRef<HTMLElement>(null);
 
   // word-by-word brightening tied to scroll progress
-  useGSAP(() => {
-    const words = root.current!.querySelectorAll("[data-w]");
-    gsap.fromTo(
-      words,
-      { color: "#3a372f" },
-      {
-        color: "#ece8df",
-        stagger: 0.4,
-        ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top 70%",
-          end: "bottom 75%",
-          scrub: true,
+  useGSAP(
+    () => {
+      const words = root.current!.querySelectorAll("[data-w]");
+      gsap.fromTo(
+        words,
+        { color: "#3a372f" },
+        {
+          color: "#ece8df",
+          stagger: 0.4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top 75%",
+            end: "bottom 80%",
+            scrub: 0.5,
+          },
         },
-      },
-    );
-  }, []);
+      );
+    },
+    [],
+    // reduced motion: show the statement fully legible, no scrub
+    () =>
+      root.current
+        ?.querySelectorAll<HTMLElement>("[data-w]")
+        .forEach((w) => (w.style.color = "#ece8df")),
+  );
 
   return (
     <section

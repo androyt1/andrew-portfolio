@@ -33,16 +33,16 @@ export default function Hero() {
         0,
       );
 
-    // parallax drift of the headline on scroll
+    // parallax drift on scroll — scrub smoothing keeps it buttery
     gsap.to(el.querySelector("[data-hero-type]"), {
-      yPercent: 22,
+      yPercent: 16,
       ease: "none",
-      scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true },
+      scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.5 },
     });
     gsap.to("[data-hero-canvas]", {
-      yPercent: 14,
+      yPercent: 10,
       ease: "none",
-      scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true },
+      scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.5 },
     });
   }, []);
 

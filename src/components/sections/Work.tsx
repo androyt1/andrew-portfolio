@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "../../lib/useGSAP";
 import { gsap } from "../../lib/smoothScroll";
-import { useCoarsePointer } from "../../lib/hooks";
+import { useCoarsePointer, useMediaQuery, usePrefersReducedMotion } from "../../lib/hooks";
 
 type Project = {
   index: string;
@@ -69,9 +69,14 @@ export default function Work() {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const coarse = useCoarsePointer();
+  const narrow = useMediaQuery("(max-width: 767px)");
+  const reduced = usePrefersReducedMotion();
+  // single source of truth: stack vertically (no pin) on small screens, touch
+  // devices, or when reduced motion is requested — pin/scrub otherwise.
+  const stacked = coarse || narrow || reduced;
 
   useGSAP(() => {
-    if (coarse) return; // mobile gets a native vertical/scroll-snap list
+    if (stacked) return;
     const trackEl = track.current!;
     const getScroll = () => trackEl.scrollWidth - window.innerWidth;
 
@@ -105,7 +110,7 @@ export default function Work() {
     return () => {
       tween.kill();
     };
-  }, [coarse]);
+  }, [stacked]);
 
   return (
     <section id="work" ref={section} className="relative overflow-hidden bg-[var(--color-ink)]">
@@ -116,21 +121,29 @@ export default function Work() {
           <br />
           Selected work
         </p>
-        <p className="label hidden text-right md:block">
-          Drag · Scroll
-          <br />
-          {PROJECTS.length} projects
-        </p>
+        {!stacked && (
+          <p className="label hidden text-right md:block">
+            Drag · Scroll
+            <br />
+            {PROJECTS.length} projects
+          </p>
+        )}
       </div>
 
-      {/* horizontal track */}
+      {/* track — horizontal (pinned) on desktop, vertical stack otherwise */}
       <div
         ref={track}
-        className="flex h-[100svh] items-center gap-[6vw] px-[var(--gutter)] will-change-transform max-md:h-auto max-md:flex-col max-md:gap-16 max-md:pb-24 max-md:pt-4"
-        style={{ width: "max-content" }}
+        className={
+          stacked
+            ? "flex flex-col gap-14 px-[var(--gutter)] pb-24 pt-2"
+            : "flex h-[100svh] items-center gap-[6vw] px-[var(--gutter)] will-change-transform"
+        }
+        style={stacked ? undefined : { width: "max-content" }}
       >
         {/* intro plate */}
-        <div className="flex h-[70vh] w-[60vw] shrink-0 flex-col justify-end max-md:h-auto max-md:w-full">
+        <div
+          className={`flex shrink-0 flex-col justify-end ${stacked ? "w-full" : "h-[70vh] w-[60vw]"}`}
+        >
           <h2 className="text-h2 font-display leading-[0.9]">
             Things I&rsquo;ve
             <br />
@@ -142,11 +155,13 @@ export default function Work() {
         </div>
 
         {PROJECTS.map((p) => (
-          <Card key={p.index} project={p} />
+          <Card key={p.index} project={p} stacked={stacked} />
         ))}
 
         {/* end plate */}
-        <div className="flex h-[70vh] w-[42vw] shrink-0 flex-col justify-center max-md:h-auto max-md:w-full">
+        <div
+          className={`flex shrink-0 flex-col justify-center ${stacked ? "w-full py-6" : "h-[70vh] w-[42vw]"}`}
+        >
           <p className="label mb-4">More on request</p>
           <a
             href="#contact"
@@ -159,20 +174,24 @@ export default function Work() {
         </div>
       </div>
 
-      {/* scrub progress */}
-      <div className="absolute inset-x-[var(--gutter)] bottom-8 z-20 hidden h-px bg-[var(--color-bone)]/15 md:block">
-        <div data-work-bar className="h-full w-full origin-left scale-x-0 bg-[var(--color-acid)]" />
-      </div>
+      {/* scrub progress (horizontal mode only) */}
+      {!stacked && (
+        <div className="absolute inset-x-[var(--gutter)] bottom-8 z-20 hidden h-px bg-[var(--color-bone)]/15 md:block">
+          <div data-work-bar className="h-full w-full origin-left scale-x-0 bg-[var(--color-acid)]" />
+        </div>
+      )}
     </section>
   );
 }
 
-function Card({ project }: { project: Project }) {
+function Card({ project, stacked }: { project: Project; stacked: boolean }) {
   return (
     <article
       data-cursor="view"
       data-cursor-label="View"
-      className="group relative h-[70vh] w-[clamp(320px,46vw,640px)] shrink-0 overflow-hidden rounded-[2px] max-md:h-[62vh] max-md:w-full"
+      className={`group relative shrink-0 overflow-hidden rounded-[2px] ${
+        stacked ? "h-[60vh] w-full" : "h-[70vh] w-[clamp(320px,46vw,640px)]"
+      }`}
       style={{ background: project.surface }}
     >
       {/* accent edge that grows on hover */}

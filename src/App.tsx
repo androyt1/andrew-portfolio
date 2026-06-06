@@ -17,10 +17,14 @@ export default function App() {
 
   useEffect(() => {
     const teardown = initSmoothScroll();
-    // recalculate triggers once fonts/layout settle
-    const t = setTimeout(() => ScrollTrigger.refresh(), 300);
+    // one coordinated refresh once async fonts have loaded (fluid type can
+    // shift trigger positions); individual sections no longer self-refresh.
+    let cancelled = false;
+    document.fonts?.ready.then(() => {
+      if (!cancelled) ScrollTrigger.refresh();
+    });
     return () => {
-      clearTimeout(t);
+      cancelled = true;
       teardown();
     };
   }, []);
