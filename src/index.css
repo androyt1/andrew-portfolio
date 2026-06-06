@@ -240,15 +240,21 @@
     opacity 0.3s ease;
   will-change: transform, width, height;
 }
+/* generic hover: an outline ring that grows AROUND the element so the text
+   underneath stays fully visible (no solid fill covering it) */
 .cursor-ring[data-active="true"] {
-  width: 5.5rem;
-  height: 5.5rem;
+  width: 3rem;
+  height: 3rem;
+  background-color: transparent;
+  border-color: var(--color-acid);
+}
+/* image cards etc. carry a label ("View") and no text to hide — keep the
+   bold solid fill here. Placed after so it overrides the outline state. */
+.cursor-ring[data-variant="view"] {
+  width: 6.5rem;
+  height: 6.5rem;
   background-color: var(--color-acid);
   border-color: transparent;
-}
-.cursor-ring[data-variant="view"] {
-  width: 7rem;
-  height: 7rem;
 }
 /* press-shrink is handled in JS (inside the transform) so it scales around
    the cursor, not the element's top-left origin */
