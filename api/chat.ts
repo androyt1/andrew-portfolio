@@ -5,7 +5,14 @@
 
 export const config = { runtime: "edge" };
 
-const MODEL = "gemini-2.0-flash";
+// Tried in order; first one with a working free tier on the key is used.
+const MODELS = [
+  "gemini-2.0-flash-lite",
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",
+  "gemini-1.5-flash",
+  "gemini-2.0-flash",
+];
 
 // --- Andrew's grounding profile (the "knowledge base") -----------------------
 const PROFILE = `
@@ -124,17 +131,26 @@ export default async function handler(req: Request): Promise<Response> {
     generationConfig: { maxOutputTokens: 400, temperature: 0.4, topP: 0.9 },
   };
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:streamGenerateContent?alt=sse&key=${key}`;
+  let upstream: Response | null = null;
+  let lastErr = "";
+  for (const model of MODELS) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${key}`;
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (r.ok && r.body) {
+      upstream = r;
+      break;
+    }
+    lastErr = `${model} -> ${r.status} ${(await r.text().catch(() => "")).slice(0, 100)}`;
+  }
 
-  const upstream = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  if (!upstream.ok || !upstream.body) {
+  if (!upstream || !upstream.body) {
+    void lastErr;
     return new Response(
-      "The assistant is briefly unavailable. Please try again, or email androyt1@gmail.com.",
+      "The assistant is briefly unavailable. Please try again in a moment, or email androyt1@gmail.com.",
       { status: 502 },
     );
   }
