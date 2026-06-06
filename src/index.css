@@ -11,8 +11,9 @@
   --color-bone: #ece8df;
   --color-bone-dim: #a7a299;
   --color-ash: #6b665d;
-  --color-acid: #ff5a1f;
-  --color-acid-deep: #e0440f;
+  /* monochrome "accent" — the brightest white, used for emphasis/highlights */
+  --color-acid: #f5f2ec;
+  --color-acid-deep: #cfcabf;
 
   --font-display: "Syne", sans-serif;
   --font-body: "Manrope", sans-serif;

@@ -26,10 +26,10 @@ function Blob({
       uFreq: { value: 1.25 },
       uMouse: { value: new THREE.Vector3(0, 0, 1) },
       uMousePull: { value: 0 },
-      uColorA: { value: new THREE.Color("#0a0402") },
-      uColorB: { value: new THREE.Color("#6e1208") },
-      uAccent: { value: new THREE.Color("#ff5a1f") },
-      uHot: { value: new THREE.Color("#ffd24a") },
+      uColorA: { value: new THREE.Color("#0b0a09") },
+      uColorB: { value: new THREE.Color("#35322e") },
+      uAccent: { value: new THREE.Color("#9a948a") },
+      uHot: { value: new THREE.Color("#f3f0e9") },
     }),
     [],
   );
@@ -127,9 +127,9 @@ function Particles({
       </bufferGeometry>
       <pointsMaterial
         size={0.02}
-        color="#ff8a3d"
+        color="#ece8df"
         transparent
-        opacity={0.85}
+        opacity={0.6}
         sizeAttenuation
         depthWrite={false}
         blending={THREE.AdditiveBlending}

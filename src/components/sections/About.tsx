@@ -81,7 +81,7 @@ export default function About() {
 
             <figure
               data-cursor="hover"
-              className="group relative aspect-[4/5] w-full max-w-[26rem] overflow-hidden rounded-[3px] bg-[radial-gradient(120%_90%_at_30%_20%,#3a1606,#0f0a06)]"
+              className="group relative aspect-[4/5] w-full max-w-[26rem] overflow-hidden rounded-[3px] bg-[radial-gradient(120%_90%_at_30%_20%,#35322e,#0e0d0b)]"
             >
               {/* monogram fallback (shows if the portrait is missing) */}
               <span className="absolute inset-0 flex items-center justify-center font-display text-mega leading-none text-[var(--color-bone)]/10">

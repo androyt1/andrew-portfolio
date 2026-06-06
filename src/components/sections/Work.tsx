@@ -23,9 +23,9 @@ const PROJECTS: Project[] = [
     blurb:
       "Analyses public repositories and auto-generates codebase summaries, stack breakdowns, code-quality reports and README drafts.",
     year: "2026",
-    tint: "#ff5a1f",
+    tint: "#ece8df",
     surface:
-      "radial-gradient(120% 90% at 20% 15%, #2a1206 0%, #0f0a06 55%), linear-gradient(135deg, #1a1108, #0a0908)",
+      "radial-gradient(120% 90% at 20% 15%, #232220 0%, #0e0d0c 55%), linear-gradient(135deg, #171614, #0a0908)",
   },
   {
     index: "02",
@@ -35,9 +35,9 @@ const PROJECTS: Project[] = [
     blurb:
       "Production RAG pipeline that ingests resume data into Pinecone and answers recruiter questions out loud — voice queries in, traced and cited responses back.",
     year: "2026",
-    tint: "#7cf0ff",
+    tint: "#c7c2b8",
     surface:
-      "radial-gradient(110% 80% at 80% 10%, #0a2630 0%, #060d10 60%), linear-gradient(135deg, #0b1418, #0a0908)",
+      "radial-gradient(110% 80% at 80% 10%, #1e1d1a 0%, #0c0b0a 60%), linear-gradient(135deg, #15140f, #0a0908)",
   },
   {
     index: "03",
@@ -47,9 +47,9 @@ const PROJECTS: Project[] = [
     blurb:
       "Context-aware assistant that lets users upload documents and query them in natural language, with multimodal PDF analysis.",
     year: "2026",
-    tint: "#c4a6ff",
+    tint: "#a7a299",
     surface:
-      "radial-gradient(120% 90% at 70% 30%, #1c1430 0%, #0c0a14 60%), linear-gradient(135deg, #14101e, #0a0908)",
+      "radial-gradient(120% 90% at 70% 30%, #201f1c 0%, #0d0c0b 60%), linear-gradient(135deg, #161512, #0a0908)",
   },
   {
     index: "04",
@@ -59,9 +59,9 @@ const PROJECTS: Project[] = [
     blurb:
       "Collaborative workspace with live cursors, threaded comments and Markdown autosave — Google Docs-style interactions.",
     year: "2026",
-    tint: "#5fd39a",
+    tint: "#837e75",
     surface:
-      "radial-gradient(120% 90% at 30% 80%, #0a2616 0%, #060f0a 60%), linear-gradient(135deg, #0b1812, #0a0908)",
+      "radial-gradient(120% 90% at 30% 80%, #1b1a17 0%, #0c0b0a 60%), linear-gradient(135deg, #141310, #0a0908)",
   },
 ];
 
