@@ -18,15 +18,14 @@ export default function Cursor() {
     const ring = ringRef.current!;
     const label = labelRef.current!;
 
-    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const ringPos = { ...mouse };
-    let raf = 0;
     let hovering = false;
 
+    // Dot and ring both track the pointer exactly (no trailing inertia) so the
+    // cursor never drifts/catches-up when you stop to click.
     const onMove = (e: PointerEvent) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      dot.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0) translate(-50%, -50%)`;
+      const t = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+      dot.style.transform = t;
+      ring.style.transform = t;
     };
 
     const setHover = (active: boolean, text = "", variant = "") => {
@@ -50,19 +49,11 @@ export default function Cursor() {
     const onDown = () => (ring.dataset.down = "true");
     const onUp = () => (ring.dataset.down = "false");
 
-    const loop = () => {
-      ringPos.x += (mouse.x - ringPos.x) * 0.28;
-      ringPos.y += (mouse.y - ringPos.y) * 0.28;
-      ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`;
-      raf = requestAnimationFrame(loop);
-    };
-
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerover", onOver, { passive: true });
     window.addEventListener("pointerout", onOut, { passive: true });
     window.addEventListener("pointerdown", onDown);
     window.addEventListener("pointerup", onUp);
-    raf = requestAnimationFrame(loop);
 
     // hide when leaving the window
     const onLeave = () => {
@@ -77,7 +68,6 @@ export default function Cursor() {
     document.addEventListener("mouseenter", onEnter);
 
     return () => {
-      cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
       window.removeEventListener("pointerout", onOut);
