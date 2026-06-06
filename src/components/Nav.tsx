@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Magnetic from "./ui/Magnetic";
 import MobileMenu from "./MobileMenu";
 import { scrollTo } from "../lib/smoothScroll";
@@ -30,30 +30,8 @@ function Clock() {
 }
 
 export default function Nav() {
-  const ref = useRef<HTMLElement>(null);
-  const lastY = useRef(0);
-
-  // hide on scroll-down, reveal on scroll-up
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      const el = ref.current;
-      if (el) {
-        if (y > lastY.current && y > 200) el.dataset.hidden = "true";
-        else el.dataset.hidden = "false";
-      }
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header
-      ref={ref}
-      data-hidden="false"
-      className="fixed inset-x-0 top-0 z-[9000] flex items-center justify-between px-[var(--gutter)] py-5 mix-blend-difference transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] data-[hidden=true]:-translate-y-full"
-    >
+    <header className="fixed inset-x-0 top-0 z-[9000] flex items-center justify-between px-[var(--gutter)] py-5 mix-blend-difference">
       <Magnetic strength={0.5}>
         <a
           href="#top"
