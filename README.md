@@ -63,3 +63,4 @@ src/
     hooks        pointer / reduced-motion / coarse-pointer helpers
   index.css      design tokens, fluid type, grain, cursor states
 ```
+<!-- deploy pipeline test 1780779743 -->
