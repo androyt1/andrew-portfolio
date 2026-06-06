@@ -237,9 +237,8 @@
   width: 7rem;
   height: 7rem;
 }
-.cursor-ring[data-down="true"] {
-  scale: 0.82;
-}
+/* press-shrink is handled in JS (inside the transform) so it scales around
+   the cursor, not the element's top-left origin */
 
 /* vignette to seat the WebGL hero */
 .vignette::after {

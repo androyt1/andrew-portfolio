@@ -19,13 +19,23 @@ export default function Cursor() {
     const label = labelRef.current!;
 
     let hovering = false;
+    let pressed = false;
+    const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
-    // Dot and ring both track the pointer exactly (no trailing inertia) so the
-    // cursor never drifts/catches-up when you stop to click.
+    // Dot and ring track the pointer exactly. The press-shrink is part of the
+    // SAME transform (after the centring translate) so it scales around the
+    // cursor itself — a separate `scale` property scales around the element's
+    // top-left origin, which was yanking the ring sideways on mousedown.
+    const render = () => {
+      const base = `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`;
+      dot.style.transform = base;
+      ring.style.transform = pressed ? `${base} scale(0.82)` : base;
+    };
+
     const onMove = (e: PointerEvent) => {
-      const t = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
-      dot.style.transform = t;
-      ring.style.transform = t;
+      pos.x = e.clientX;
+      pos.y = e.clientY;
+      render();
     };
 
     const setHover = (active: boolean, text = "", variant = "") => {
@@ -46,8 +56,14 @@ export default function Cursor() {
       const next = (e.relatedTarget as HTMLElement)?.closest?.("[data-cursor]");
       if (el && !next) setHover(false);
     };
-    const onDown = () => (ring.dataset.down = "true");
-    const onUp = () => (ring.dataset.down = "false");
+    const onDown = () => {
+      pressed = true;
+      render();
+    };
+    const onUp = () => {
+      pressed = false;
+      render();
+    };
 
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerover", onOver, { passive: true });
