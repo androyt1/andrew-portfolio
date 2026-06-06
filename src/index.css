@@ -55,9 +55,32 @@
     text-rendering: optimizeLegibility;
     background: var(--color-void);
     overflow-x: clip;
-    /* always reserve the scrollbar space so content never shifts sideways
-       when the scrollbar appears/disappears (e.g. during smooth scroll) */
+    /* force the vertical scrollbar to always be present so the layout can
+       never shift sideways when an auto-hiding scrollbar appears on scroll */
+    overflow-y: scroll;
     scrollbar-gutter: stable;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: color-mix(in oklab, var(--color-bone) 22%, transparent) transparent;
+  }
+
+  /* Branded, always-present scrollbar (Chromium). Styling ::-webkit-scrollbar
+     forces a classic, non-overlay scrollbar that never toggles — the real fix
+     for the click-then-shift on Windows "auto-hide scrollbars". */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-bone) 20%, transparent);
+    border-radius: 999px;
+    border: 3px solid var(--color-void);
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--color-bone) 36%, transparent);
   }
 
   /* Lenis controls scroll — keep native scrollbar out of the way */
