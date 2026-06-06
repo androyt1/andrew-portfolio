@@ -151,16 +151,20 @@ export default function GravScene({
   pointer,
   reduced,
   lite = false,
+  active = true,
 }: {
   pointer: PointerRef;
   reduced: boolean;
   lite?: boolean;
+  active?: boolean;
 }) {
   return (
     <Canvas
+      // stop the render loop entirely when the hero is off-screen (0 GPU)
+      frameloop={active ? "always" : "never"}
       camera={{ position: [0, 0, 6], fov: 42 }}
       dpr={[1, reduced ? 1.2 : lite ? 1.5 : 1.8]}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      gl={{ antialias: !lite, alpha: true, powerPreference: "high-performance" }}
       style={{ width: "100%", height: "100%" }}
     >
       <Rig />

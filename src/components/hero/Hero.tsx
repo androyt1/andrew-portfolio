@@ -1,4 +1,4 @@
-import { Suspense, lazy, useRef } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { usePointer, usePrefersReducedMotion, useCoarsePointer } from "../../lib/hooks";
 import { useGSAP } from "../../lib/useGSAP";
 import { gsap } from "../../lib/smoothScroll";
@@ -6,11 +6,29 @@ import { scrollTo } from "../../lib/smoothScroll";
 
 const GravScene = lazy(() => import("./GravScene"));
 
+// honour Data Saver — skip the heavy WebGL on metered/save-data connections
+const saveData =
+  typeof navigator !== "undefined" &&
+  (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+
 export default function Hero() {
   const reduced = usePrefersReducedMotion();
   const coarse = useCoarsePointer();
   const { target } = usePointer();
   const root = useRef<HTMLElement>(null);
+  // only render the WebGL while the hero is on (or near) screen
+  const [heroOnScreen, setHeroOnScreen] = useState(true);
+
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setHeroOnScreen(entry.isIntersecting),
+      { rootMargin: "300px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // entrance choreography (fires after preloader hands off)
   useGSAP(() => {
@@ -53,9 +71,9 @@ export default function Hero() {
     >
       {/* WebGL layer */}
       <div data-hero-canvas className="pointer-events-none absolute inset-0 -z-0">
-        {!reduced ? (
+        {!reduced && !saveData ? (
           <Suspense fallback={null}>
-            <GravScene pointer={target} reduced={reduced} lite={coarse} />
+            <GravScene pointer={target} reduced={reduced} lite={coarse} active={heroOnScreen} />
           </Suspense>
         ) : (
           <div className="absolute left-1/2 top-1/2 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#35322e,transparent_70%)] blur-2xl" />
