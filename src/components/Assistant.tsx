@@ -39,10 +39,42 @@ export default function Assistant() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const recogRef = useRef<SR | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
 
   const speechSupported =
     typeof window !== "undefined" &&
     ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
+
+  // pick the most natural English voice the device offers (defaults are robotic)
+  useEffect(() => {
+    if (typeof speechSynthesis === "undefined") return;
+    const pick = () => {
+      const voices = speechSynthesis.getVoices();
+      if (!voices.length) return;
+      const en = voices.filter((v) => /^en[-_]?/i.test(v.lang));
+      const ranked = [
+        /Google UK English Female/i,
+        /Google UK English/i,
+        /Google US English/i,
+        /Natural/i,
+        /\bSiri\b/i,
+        /Samantha/i,
+        /Aria|Jenny|Sonia|Libby|Ava|Emma/i,
+        /Online/i,
+        /Google/i,
+      ];
+      let chosen: SpeechSynthesisVoice | undefined;
+      for (const re of ranked) {
+        chosen = en.find((v) => re.test(v.name));
+        if (chosen) break;
+      }
+      voiceRef.current =
+        chosen ?? en.find((v) => /en-GB/i.test(v.lang)) ?? en[0] ?? voices[0] ?? null;
+    };
+    pick();
+    speechSynthesis.addEventListener("voiceschanged", pick);
+    return () => speechSynthesis.removeEventListener("voiceschanged", pick);
+  }, []);
 
   // autoscroll to newest message
   useEffect(() => {
@@ -66,11 +98,8 @@ export default function Assistant() {
     if (!voiceOut || typeof speechSynthesis === "undefined") return;
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    const v =
-      speechSynthesis.getVoices().find((x) => /en-GB/i.test(x.lang)) ??
-      speechSynthesis.getVoices().find((x) => /en/i.test(x.lang));
-    if (v) u.voice = v;
-    u.rate = 1.02;
+    if (voiceRef.current) u.voice = voiceRef.current;
+    u.rate = 1;
     u.pitch = 1;
     speechSynthesis.speak(u);
   }
