@@ -13,6 +13,11 @@ const SUGGESTIONS = [
 const GREETING =
   "Hi — I'm Andrew's AI assistant, a small RAG model grounded in his CV. Ask me about his experience, stack, projects or availability.";
 
+// Opera and Firefox don't ship the Web Speech Recognition API, so the mic can't
+// transcribe there — let the user know rather than leaving a dead button.
+const NO_MIC_NOTE =
+  "Voice input isn't available in this browser — it needs Chrome, Edge or Safari. You can type your question here instead.";
+
 // minimal Web Speech typings (the DOM lib types aren't always present)
 type SREvent = {
   results: { length: number; [i: number]: { 0: { transcript: string }; isFinal: boolean } };
@@ -170,7 +175,16 @@ export default function Assistant() {
   }
 
   function toggleMic() {
-    if (!speechSupported) return;
+    if (!speechSupported) {
+      // surface the limitation once, then focus the text input
+      setMessages((m) =>
+        m[m.length - 1]?.content === NO_MIC_NOTE
+          ? m
+          : [...m, { role: "assistant", content: NO_MIC_NOTE }],
+      );
+      inputRef.current?.focus();
+      return;
+    }
     if (listening) {
       recogRef.current?.stop();
       return;
@@ -308,24 +322,31 @@ export default function Assistant() {
           }}
           className="flex items-center gap-2 border-t border-[var(--color-bone)]/10 px-3 py-3"
         >
-          {speechSupported && (
-            <button
-              type="button"
-              onClick={toggleMic}
-              data-cursor="hover"
-              aria-label={listening ? "Stop listening" : "Speak your question"}
-              className={`shrink-0 rounded-full border p-2.5 transition-colors ${
-                listening
-                  ? "animate-pulse border-[var(--color-acid)] text-[var(--color-acid)]"
-                  : "border-[var(--color-bone)]/25 text-[var(--color-bone-dim)] hover:border-[var(--color-acid)]/60 hover:text-[var(--color-bone)]"
-              }`}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4" />
-              </svg>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={toggleMic}
+            data-cursor="hover"
+            aria-label={
+              !speechSupported
+                ? "Voice input unavailable in this browser"
+                : listening
+                  ? "Stop listening"
+                  : "Speak your question"
+            }
+            title={speechSupported ? undefined : "Voice input needs Chrome, Edge or Safari"}
+            className={`shrink-0 rounded-full border p-2.5 transition-colors ${
+              listening
+                ? "animate-pulse border-[var(--color-acid)] text-[var(--color-acid)]"
+                : speechSupported
+                  ? "border-[var(--color-bone)]/25 text-[var(--color-bone-dim)] hover:border-[var(--color-acid)]/60 hover:text-[var(--color-bone)]"
+                  : "border-[var(--color-bone)]/15 text-[var(--color-ash)] hover:text-[var(--color-bone-dim)]"
+            }`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4" />
+            </svg>
+          </button>
           <input
             ref={inputRef}
             value={input}
