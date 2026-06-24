@@ -272,9 +272,44 @@
   );
 }
 
+/* ----------------------------------------------------------------------------
+   Speaking indicator (TTS equalizer)
+---------------------------------------------------------------------------- */
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+.eq-bar {
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: currentColor;
+  transform-origin: bottom;
+  animation-name: eq-bounce;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes eq-bounce {
+  0%,
+  100% {
+    transform: scaleY(0.22);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .grain {
     animation: none;
+  }
+  /* hold the bars at a static mid-height instead of bouncing */
+  .eq-bar {
+    animation: none;
+    transform: scaleY(0.6);
   }
   * {
     scroll-behavior: auto !important;

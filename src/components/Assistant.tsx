@@ -40,6 +40,7 @@ export default function Assistant() {
   const [busy, setBusy] = useState(false);
   const [listening, setListening] = useState(false);
   const [voiceOut, setVoiceOut] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const recogRef = useRef<SR | null>(null);
@@ -122,13 +123,23 @@ export default function Assistant() {
     if (voiceRef.current) u.voice = voiceRef.current;
     u.rate = 1;
     u.pitch = 1;
+    // drive the equalizer off the real playback events
+    u.onstart = () => setSpeaking(true);
+    u.onend = () => setSpeaking(false);
+    u.onerror = () => setSpeaking(false);
     speechSynthesis.speak(u);
+  }
+
+  // cancel any in-flight speech and drop the speaking indicator
+  function stopSpeaking() {
+    if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+    setSpeaking(false);
   }
 
   async function send(text: string) {
     const q = text.trim();
     if (!q || busy) return;
-    if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+    stopSpeaking();
     setInput("");
 
     const next: Msg[] = [...messages, { role: "user", content: q }];
@@ -245,37 +256,49 @@ export default function Assistant() {
         className="fixed bottom-0 right-0 z-[9090] flex h-[min(72vh,600px)] w-full origin-bottom-right flex-col overflow-hidden border border-[var(--color-bone)]/12 bg-[var(--color-ink)]/95 backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] data-[open=false]:pointer-events-none data-[open=false]:translate-y-4 data-[open=false]:opacity-0 sm:bottom-20 sm:right-5 sm:h-[560px] sm:w-[400px] sm:rounded-2xl"
       >
         {/* header */}
-        <div className="flex items-center justify-between border-b border-[var(--color-bone)]/10 px-5 py-4">
-          <div>
+        <div className="flex items-center justify-between gap-3 border-b border-[var(--color-bone)]/10 px-5 py-4">
+          <div className="min-w-0">
             <p className="font-display text-base font-bold leading-none text-[var(--color-bone)]">
               Andrew&rsquo;s AI<span className="text-[var(--color-acid)]">.</span>
             </p>
-            <p className="label mt-1 normal-case tracking-normal">RAG assistant · grounded in his CV</p>
+            <p className="label mt-1 truncate normal-case tracking-normal">Grounded in his CV</p>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-2 text-[var(--color-bone-dim)]">
             <button
               onClick={() => {
                 const turningOn = !voiceOut;
                 if (turningOn) primeSpeech();
-                else if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+                else stopSpeaking();
                 setVoiceOut(turningOn);
               }}
               data-cursor="hover"
               aria-pressed={voiceOut}
+              aria-label={voiceOut ? "Turn spoken answers off" : "Turn spoken answers on"}
               title={voiceOut ? "Spoken answers on" : "Spoken answers off"}
-              className={`rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wide transition-colors ${
+              className={`transition-colors ${
                 voiceOut
-                  ? "border-[var(--color-acid)] text-[var(--color-acid)]"
-                  : "border-[var(--color-bone)]/25 text-[var(--color-bone-dim)]"
+                  ? "text-[var(--color-acid)]"
+                  : "text-[var(--color-bone-dim)] hover:text-[var(--color-bone)]"
               }`}
             >
-              Voice {voiceOut ? "on" : "off"}
+              {speaking ? (
+                <Equalizer className="h-[18px]" />
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M11 5 6 9H2v6h4l5 4z" />
+                  {voiceOut ? (
+                    <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14" />
+                  ) : (
+                    <path d="m17 9 5 6M22 9l-5 6" />
+                  )}
+                </svg>
+              )}
             </button>
             <button
               onClick={() => setOpen(false)}
               data-cursor="hover"
               aria-label="Close"
-              className="px-2 text-[var(--color-bone-dim)] transition-colors hover:text-[var(--color-bone)]"
+              className="transition-colors hover:text-[var(--color-bone)]"
             >
               ✕
             </button>
@@ -294,6 +317,11 @@ export default function Assistant() {
                 }`}
               >
                 {m.content || (busy ? "…" : "")}
+                {m.role === "assistant" && speaking && i === messages.length - 1 && (
+                  <span className="mt-2.5 flex">
+                    <Equalizer className="h-3 text-[var(--color-acid)]" />
+                  </span>
+                )}
               </p>
             </div>
           ))}
@@ -368,6 +396,26 @@ export default function Assistant() {
         </form>
       </div>
     </>
+  );
+}
+
+// stylised speaking indicator — bars loop on a CSS animation while TTS plays
+// (the Web Speech API exposes no amplitude, so this is decorative, not a real
+// waveform). Staggered delays/durations give it an organic, uneven bounce.
+function Equalizer({ className = "" }: { className?: string }) {
+  const bars = [
+    { d: "0ms", t: "0.7s" },
+    { d: "180ms", t: "0.95s" },
+    { d: "60ms", t: "0.8s" },
+    { d: "240ms", t: "1.05s" },
+    { d: "120ms", t: "0.85s" },
+  ];
+  return (
+    <span className={`eq ${className}`.trim()} aria-hidden="true">
+      {bars.map((b, i) => (
+        <span key={i} className="eq-bar" style={{ animationDelay: b.d, animationDuration: b.t }} />
+      ))}
+    </span>
   );
 }
 
