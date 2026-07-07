@@ -145,10 +145,11 @@ export default async function handler(req: Request): Promise<Response> {
       break;
     }
     lastErr = `${model} -> ${r.status} ${(await r.text().catch(() => "")).slice(0, 100)}`;
+    console.error("[chat] model attempt failed:", lastErr);
   }
 
   if (!upstream || !upstream.body) {
-    void lastErr;
+    console.error("[chat] all models failed, last error:", lastErr);
     return new Response(
       "The assistant is briefly unavailable. Please try again in a moment, or email androyt1@gmail.com.",
       { status: 502 },
