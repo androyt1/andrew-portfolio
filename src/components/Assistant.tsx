@@ -267,7 +267,7 @@ export default function Assistant() {
             </p>
             <p className="label mt-1 truncate normal-case tracking-normal">Grounded in his CV</p>
           </div>
-          <div className="flex shrink-0 items-center gap-2 text-[var(--color-bone-dim)]">
+          <div className="flex shrink-0 items-center gap-4 text-[var(--color-bone-dim)]">
             <button
               onClick={() => {
                 const turningOn = !voiceOut;
@@ -279,13 +279,21 @@ export default function Assistant() {
               aria-pressed={voiceOut}
               aria-label={voiceOut ? "Turn spoken answers off" : "Turn spoken answers on"}
               title={voiceOut ? "Spoken answers on" : "Spoken answers off"}
-              className={`transition-colors ${
+              className={`group relative flex items-center justify-center rounded-full p-1.5 transition-all duration-300 hover:scale-110 active:scale-95 ${
                 voiceOut
                   ? "text-[var(--color-acid)]"
                   : "text-[var(--color-bone-dim)] hover:text-[var(--color-bone)]"
               }`}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {/* ambient glow — pulses gently to invite a tap when off, holds a
+                  steady brighter glow once voice replies are on */}
+              <span
+                aria-hidden="true"
+                className={`absolute inset-0 rounded-full bg-[var(--color-acid)] blur-md transition-opacity duration-300 ${
+                  voiceOut ? "opacity-50" : "animate-pulse opacity-30 group-hover:opacity-40"
+                }`}
+              />
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative">
                 <path d="M11 5 6 9H2v6h4l5 4z" />
                 {voiceOut ? (
                   <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14" />
