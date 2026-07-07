@@ -1,7 +1,9 @@
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { useGSAP } from "../../lib/useGSAP";
 import { gsap } from "../../lib/smoothScroll";
 import { useCoarsePointer, useMediaQuery, usePrefersReducedMotion } from "../../lib/hooks";
+
+type IconKind = "lens" | "voice" | "study" | "collab";
 
 type Project = {
   index: string;
@@ -12,6 +14,7 @@ type Project = {
   year: string;
   tint: string;
   surface: string;
+  icon: IconKind;
 };
 
 const PROJECTS: Project[] = [
@@ -26,6 +29,7 @@ const PROJECTS: Project[] = [
     tint: "#ece8df",
     surface:
       "radial-gradient(120% 90% at 20% 15%, #232220 0%, #0e0d0c 55%), linear-gradient(135deg, #171614, #0a0908)",
+    icon: "lens",
   },
   {
     index: "02",
@@ -38,6 +42,7 @@ const PROJECTS: Project[] = [
     tint: "#c7c2b8",
     surface:
       "radial-gradient(110% 80% at 80% 10%, #1e1d1a 0%, #0c0b0a 60%), linear-gradient(135deg, #15140f, #0a0908)",
+    icon: "voice",
   },
   {
     index: "03",
@@ -50,6 +55,7 @@ const PROJECTS: Project[] = [
     tint: "#a7a299",
     surface:
       "radial-gradient(120% 90% at 70% 30%, #201f1c 0%, #0d0c0b 60%), linear-gradient(135deg, #161512, #0a0908)",
+    icon: "study",
   },
   {
     index: "04",
@@ -62,6 +68,7 @@ const PROJECTS: Project[] = [
     tint: "#837e75",
     surface:
       "radial-gradient(120% 90% at 30% 80%, #1b1a17 0%, #0c0b0a 60%), linear-gradient(135deg, #141310, #0a0908)",
+    icon: "collab",
   },
 ];
 
@@ -207,6 +214,11 @@ function Card({ project, stacked }: { project: Project; stacked: boolean }) {
         </div>
 
         <div data-card-meta>
+          <ProjectIcon
+            kind={project.icon}
+            className="mb-4 h-8 w-8 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1"
+            style={{ color: project.tint }}
+          />
           <p className="label mb-3">{project.category}</p>
           <h3 className="font-display text-[clamp(1.6rem,4.2vw,3.75rem)] leading-[0.95] [overflow-wrap:break-word] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1">
             {project.title}
@@ -228,5 +240,70 @@ function Card({ project, stacked }: { project: Project; stacked: boolean }) {
         }}
       />
     </article>
+  );
+}
+
+// one small line-icon per project, matching what it actually does rather than
+// a generic badge — kept in the same thin-stroke language as the rest of the
+// site's iconography (mic/speaker/send in Assistant.tsx).
+function ProjectIcon({
+  kind,
+  className,
+  style,
+}: {
+  kind: IconKind;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  const shared = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.4,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+  return (
+    <svg className={className} style={style} {...shared}>
+      {kind === "lens" && (
+        <>
+          <circle cx="10.2" cy="10.2" r="6.7" />
+          <path d="M15.2 15.2 21 21" />
+        </>
+      )}
+      {kind === "voice" && (
+        <>
+          <path d="M3 12h.01" />
+          <path d="M7.5 8.5v7" />
+          <path d="M12 4.5v15" />
+          <path d="M16.5 8.5v7" />
+          <path d="M21 12h.01" />
+        </>
+      )}
+      {kind === "study" && (
+        <path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v13a2.5 2.5 0 0 0-2.5-2.5h-7zM21.5 4.5h-6A3.5 3.5 0 0 0 12 8v13a2.5 2.5 0 0 1 2.5-2.5h7z" />
+      )}
+      {kind === "collab" && (
+        <>
+          {/* two cursor arrows, clearly offset — reads as "live, multiple
+              collaborators" rather than a single pointer */}
+          <path
+            d="M3 3l7.07 16.97 2.51-7.39L21 12 3 3z"
+            transform="translate(-2,-2) scale(0.55)"
+            fill="currentColor"
+            stroke="#0f0e0c"
+            strokeWidth={1}
+            opacity={0.4}
+          />
+          <path
+            d="M3 3l7.07 16.97 2.51-7.39L21 12 3 3z"
+            transform="translate(7,7) scale(0.55)"
+            fill="currentColor"
+            stroke="#0f0e0c"
+            strokeWidth={1}
+          />
+        </>
+      )}
+    </svg>
   );
 }
