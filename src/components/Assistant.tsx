@@ -236,19 +236,23 @@ export default function Assistant() {
 
   return (
     <>
-      {/* launcher */}
-      <button
-        onClick={() => setOpen((o) => !o)}
-        data-cursor="hover"
-        aria-label={open ? "Close assistant" : "Ask Andrew's AI assistant"}
-        className="fixed bottom-5 right-5 z-[9100] flex items-center gap-2.5 rounded-full border border-[var(--color-bone)]/15 bg-[var(--color-coal)]/90 px-4 py-3 font-mono text-label uppercase tracking-[0.14em] text-[var(--color-bone)] backdrop-blur-md transition-colors hover:border-[var(--color-acid)]/60"
-      >
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-acid)] opacity-60" />
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[var(--color-acid)]" />
-        </span>
-        {open ? "Close" : "Ask my AI"}
-      </button>
+      {/* launcher — hidden while the panel is open; its header ✕ already closes it,
+          and on mobile the panel's input row sits flush at the screen bottom, right
+          under where this pill would render, so showing both overlaps them. */}
+      {!open && (
+        <button
+          onClick={() => setOpen(true)}
+          data-cursor="hover"
+          aria-label="Ask Andrew's AI assistant"
+          className="fixed bottom-5 right-5 z-[9100] flex items-center gap-2.5 rounded-full border border-[var(--color-bone)]/15 bg-[var(--color-coal)]/90 px-4 py-3 font-mono text-label uppercase tracking-[0.14em] text-[var(--color-bone)] backdrop-blur-md transition-colors hover:border-[var(--color-acid)]/60"
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-acid)] opacity-60" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[var(--color-acid)]" />
+          </span>
+          Ask my AI
+        </button>
+      )}
 
       {/* panel */}
       <div
