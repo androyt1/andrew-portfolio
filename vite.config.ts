@@ -10,8 +10,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          three: ["three"],
-          fiber: ["@react-three/fiber"],
+          ogl: ["ogl"],
           gsap: ["gsap"],
         },
       },

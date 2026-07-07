@@ -14,18 +14,16 @@
     "@fontsource-variable/syne": "^5.2.7",
     "@fontsource/instrument-serif": "^5.2.8",
     "@fontsource/space-mono": "^5.2.9",
-    "@react-three/fiber": "^9.1.2",
     "gsap": "^3.13.0",
     "lenis": "^1.1.20",
+    "ogl": "^1.0.11",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "three": "^0.171.0"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.10",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
-    "@types/three": "^0.171.0",
     "@vitejs/plugin-react": "^4.4.0",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.0",
