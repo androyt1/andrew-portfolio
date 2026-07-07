@@ -298,7 +298,7 @@ export default function Assistant() {
               onClick={() => setOpen(false)}
               data-cursor="hover"
               aria-label="Close"
-              className="transition-colors hover:text-[var(--color-bone)]"
+              className="-m-1.5 p-1.5 text-2xl leading-none transition-colors hover:text-[var(--color-bone)] sm:m-0 sm:p-0 sm:text-base"
             >
               ✕
             </button>
