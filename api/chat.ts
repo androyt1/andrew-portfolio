@@ -1,17 +1,19 @@
-// Vercel Edge Function — RAG-over-CV assistant powered by Google Gemini.
+// Vercel Edge Function — RAG-over-CV assistant powered by Groq (OpenAI-compatible API).
 // The CV is small enough that context-stuffing beats a vector DB: the whole
 // profile is the grounding context, and the model is told to answer only from
 // it. Streams plain text back to the client.
+//
+// Switched from Google Gemini because Google zeroed out the free tier for
+// UK/EEA/Switzerland accounts (quota `limit: 0` on every model, permanent,
+// not something a new key fixes). Groq's free tier has no such restriction.
 
 export const config = { runtime: "edge" };
 
-// Tried in order; first one with a working free tier on the key is used.
+// Tried in order; first one that succeeds is used.
 const MODELS = [
-  "gemini-2.0-flash-lite",
-  "gemini-2.5-flash",
-  "gemini-2.5-flash-lite",
-  "gemini-1.5-flash",
-  "gemini-2.0-flash",
+  "llama-3.3-70b-versatile",
+  "llama-3.1-8b-instant",
+  "openai/gpt-oss-20b",
 ];
 
 // --- Andrew's grounding profile (the "knowledge base") -----------------------
@@ -98,7 +100,7 @@ export default async function handler(req: Request): Promise<Response> {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const key = process.env.GEMINI_API_KEY;
+  const key = process.env.GROQ_API_KEY;
   if (!key) {
     return new Response(
       "The assistant isn't configured yet. Please reach Andrew at androyt1@gmail.com.",
@@ -114,7 +116,7 @@ export default async function handler(req: Request): Promise<Response> {
     return new Response("Bad request", { status: 400 });
   }
 
-  // guards (abuse / cost control — Gemini free tier also hard-caps usage)
+  // guards (abuse / cost control — Groq free tier also rate-limits usage)
   messages = messages
     .filter((m) => (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
     .slice(-12)
@@ -123,22 +125,23 @@ export default async function handler(req: Request): Promise<Response> {
   if (messages.length === 0) return new Response("No message", { status: 400 });
 
   const payload = {
-    system_instruction: { parts: [{ text: SYSTEM }] },
-    contents: messages.map((m) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    })),
-    generationConfig: { maxOutputTokens: 400, temperature: 0.4, topP: 0.9 },
+    messages: [{ role: "system", content: SYSTEM }, ...messages],
+    max_completion_tokens: 400,
+    temperature: 0.4,
+    top_p: 0.9,
+    stream: true,
   };
 
   let upstream: Response | null = null;
   let lastErr = "";
   for (const model of MODELS) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${key}`;
-    const r = await fetch(url, {
+    const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${key}`,
+      },
+      body: JSON.stringify({ ...payload, model }),
     });
     if (r.ok && r.body) {
       upstream = r;
@@ -178,10 +181,7 @@ export default async function handler(req: Request): Promise<Response> {
               if (!data || data === "[DONE]") continue;
               try {
                 const json = JSON.parse(data);
-                const text: string =
-                  json?.candidates?.[0]?.content?.parts
-                    ?.map((p: { text?: string }) => p.text ?? "")
-                    .join("") ?? "";
+                const text: string = json?.choices?.[0]?.delta?.content ?? "";
                 if (text) controller.enqueue(encoder.encode(text));
               } catch {
                 /* ignore partial json */
