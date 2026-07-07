@@ -10,7 +10,7 @@
   --color-coal: #16140f;
   --color-bone: #ece8df;
   --color-bone-dim: #a7a299;
-  --color-ash: #6b665d;
+  --color-ash: #847e73;
   /* monochrome "accent" — the brightest white, used for emphasis/highlights */
   --color-acid: #f5f2ec;
   --color-acid-deep: #cfcabf;
@@ -198,6 +198,27 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+
+  /* off-screen until keyboard-focused, then drops in above everything
+     (including the preloader) so Tab always reaches it first */
+  .skip-link {
+    position: fixed;
+    top: -4rem;
+    left: 1rem;
+    z-index: 10001;
+    background: var(--color-acid);
+    color: var(--color-void);
+    padding: 0.75rem 1.25rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    transition: top 0.25s var(--ease-expo);
+  }
+  .skip-link:focus {
+    top: 1rem;
   }
 }
 

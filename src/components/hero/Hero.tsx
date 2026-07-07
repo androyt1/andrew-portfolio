@@ -102,6 +102,18 @@ export default function Hero() {
         data-hero-type
         className="relative z-10 flex flex-1 flex-col items-center justify-center text-center select-none"
       >
+        {/* the edge vignette darkens the frame, not the center — exactly where
+            this text sits — so the blob's own light/dark variance can bleed
+            through the type. This scrim dims specifically behind the text
+            block, independent of that decorative edge treatment. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(ellipse 62% 58% at 50% 50%, color-mix(in oklab, var(--color-void) 60%, transparent) 0%, color-mix(in oklab, var(--color-void) 28%, transparent) 55%, transparent 78%)",
+          }}
+        />
         <h1 className="font-display text-mega leading-[0.82]">
           <span className="sr-only">
             Andrew Aghoghovwia — Senior Frontend &amp; AI Engineer based in the UK

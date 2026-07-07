@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { initSmoothScroll, ScrollTrigger } from "./lib/smoothScroll";
+import { useEffect, useRef, useState } from "react";
+import { initSmoothScroll, ScrollTrigger, scrollTo } from "./lib/smoothScroll";
 import Cursor from "./components/Cursor";
 import Grain from "./components/Grain";
 import Preloader from "./components/Preloader";
@@ -15,6 +15,7 @@ import Assistant from "./components/Assistant";
 
 export default function App() {
   const [ready, setReady] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const teardown = initSmoothScroll();
@@ -40,11 +41,22 @@ export default function App() {
 
   return (
     <>
+      <a
+        href="#top"
+        className="skip-link"
+        onClick={(e) => {
+          e.preventDefault();
+          scrollTo(0);
+          mainRef.current?.focus();
+        }}
+      >
+        Skip to content
+      </a>
       <Grain />
       <Cursor />
       <Preloader onDone={() => setReady(true)} />
       <Nav />
-      <main id="top">
+      <main id="top" ref={mainRef} tabIndex={-1}>
         <Hero />
         <Manifesto />
         <Work />

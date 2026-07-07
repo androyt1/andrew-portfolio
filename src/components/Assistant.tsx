@@ -243,7 +243,7 @@ export default function Assistant() {
         <button
           onClick={() => setOpen(true)}
           data-cursor="hover"
-          aria-label="Ask Andrew's AI assistant"
+          aria-label="Ask my AI — Andrew's AI assistant"
           className="fixed bottom-5 right-5 z-[9100] flex items-center gap-2.5 rounded-full border border-[var(--color-bone)]/15 bg-[var(--color-coal)]/90 px-4 py-3 font-mono text-label uppercase tracking-[0.14em] text-[var(--color-bone)] backdrop-blur-md transition-colors hover:border-[var(--color-acid)]/60"
         >
           <span className="relative flex h-2.5 w-2.5">
