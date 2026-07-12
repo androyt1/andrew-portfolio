@@ -2,6 +2,8 @@
 
 **Live:** [andrew-aghoghovwia.vercel.app](https://andrew-aghoghovwia.vercel.app)
 
+![Hero section — WebGL gravity blob behind the Andrew Aghoghovwia wordmark](.github/screenshot.png)
+
 An Awwwards-tier personal portfolio for **Andrew Aghoghovwia**, Senior Frontend & AI Engineer. Themed around *gravity / weight / pull* ("interfaces with gravity"). Dark, cinematic, scroll-driven, built for 60fps.
 
 **Sections:** Hero (WebGL) → Manifesto → Work (DevLens · RAG CV · AI Study Companion · LiveBoard) → Stack (Frontend · AI · Platform · Testing) → About (portrait + experience timeline + stat counters) → Marquee → Contact.
